@@ -1,0 +1,66 @@
+import pygame
+import os
+from tkinter import *
+from tkinter import filedialog
+
+# Initialize pygame
+pygame.init()
+
+# Create the main window
+root = Tk()
+root.title("Music Player")
+
+# Set up the file dialog
+def browse_file():
+    file_path = filedialog.askopenfilename()
+    add_to_playlist(file_path)
+
+# Add selected file to the playlist
+def add_to_playlist(file):
+    playlist_box.insert(END, os.path.basename(file))
+    playlist.append(file)
+
+# Create playlist
+playlist = []
+
+# Create playlist box
+playlist_box = Listbox(root, bg="black", fg="white")
+playlist_box.pack(fill="both", expand="yes")
+
+# Create buttons
+add_button = Button(root, text="Add Song", command=browse_file)
+add_button.pack()
+
+play_button = Button(root, text="Play")
+play_button.pack()
+
+pause_button = Button(root, text="Pause")
+pause_button.pack()
+
+stop_button = Button(root, text="Stop")
+stop_button.pack()
+
+# Play selected song
+def play_music():
+    if playlist:
+        song = playlist_box.get(ACTIVE)
+        pygame.mixer.music.load(song)
+        pygame.mixer.music.play()
+
+# Pause the playback
+def pause_music():
+    pygame.mixer.music.pause()
+
+# Stop the playback
+def stop_music():
+    pygame.mixer.music.stop()
+
+play_button.config(command=play_music)
+pause_button.config(command=pause_music)
+stop_button.config(command=stop_music)
+
+# Run the GUI loop
+root.mainloop()
+
+# Clean up pygame
+pygame.quit()
